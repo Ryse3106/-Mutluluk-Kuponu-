@@ -1,28 +1,13 @@
 {
   "name": "Mutluluk Kuponu",
   "short_name": "Kupon",
-  "start_url": "./Mutluluk_Kuponu.html",
-  "scope": "./",
+  "start_url": "/-Mutluluk-Kuponu-/index.html",
+  "scope": "/-Mutluluk-Kuponu-/",
   "display": "standalone",
-  "background_color": "#1976d2",
+  "background_color": "#ffffff",
   "theme_color": "#1976d2",
-  "description": "Kupon seçimi ve mutluluk yağmuru 🙂🎊",
   "icons": [
-    {
-      "src": "icons/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "icons/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    },
-    {
-      "src": "icons/icon-512-maskable.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
+    { "src": "/-Mutluluk-Kuponu-/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/-Mutluluk-Kuponu-/icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
   ]
 }
