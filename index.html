@@ -1,363 +1,862 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
 <title>Mutluluk Kuponu</title>
+
 <style>
-    html, body {
+  :root{
+    --bg:#f4f6f8;
+    --panel:#ffffff;
+    --primary:#1976d2;
+    --danger:#e53935;
+    --soft:#e3f2fd;
+    --text:#1f2a37;
+    --muted:#6b7280;
+    --ring: rgba(25,118,210,.28);
+  }
+
+  html, body { margin:0; padding:0; }
+  body{
+    font-family: Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 20px;
+  }
+
+  .panel{
+    background: var(--panel);
+    padding: 20px;
+    border-radius: 14px;
+    width: 100%;
+    max-width: 440px;
+    margin: 0 auto;
+    box-shadow: 0 10px 25px rgba(0,0,0,.10);
+  }
+
+  h2{ margin: 0 0 10px; text-align:center; }
+
+  .sub{
+    text-align:center;
+    color: var(--muted);
+    margin: 0 0 14px;
+    font-size: .95rem;
+  }
+
+  .field{ margin: 10px 0; }
+  label{ display:block; font-weight: 700; margin: 0 0 6px; }
+
+  select, button, .ghost-btn{
+    width: 100%;
+    padding: 12px 12px;
+    margin: 6px 0;
+    border-radius: 10px;
+    font-size: 1rem;
+  }
+
+  select{
+    border: 1px solid #d1d5db;
+    background: #fff;
+    outline: none;
+  }
+  select:focus{
+    box-shadow: 0 0 0 4px var(--ring);
+    border-color: var(--primary);
+  }
+
+  button{
+    cursor:pointer;
+    border:none;
+    background: var(--primary);
+    color:#fff;
+    font-weight: 800;
+  }
+  button.secondary{ background: var(--danger); }
+  button.ghost{
+    background: transparent;
+    border: 1px solid #d1d5db;
+    color: var(--text);
+    font-weight: 700;
+  }
+  button:active{ transform: translateY(1px); }
+
+  .result{
+    background: var(--soft);
+    padding: 14px;
+    margin-top: 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(25,118,210,.18);
+  }
+
+  .result.fade{
+    animation: fadeUp .35s ease;
+  }
+  @keyframes fadeUp{
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .result h3{
+    margin: 0 0 10px;
+    font-size: 1.05rem;
+  }
+
+  .meta{
+    display:flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 8px 0 10px;
+    color: var(--muted);
+    font-size: .92rem;
+  }
+  .pill{
+    background: rgba(255,255,255,.65);
+    border: 1px solid rgba(0,0,0,.06);
+    padding: 6px 10px;
+    border-radius: 999px;
+  }
+
+  .actions{
+    display:flex;
+    gap: 10px;
+    margin-top: 12px;
+  }
+  .actions button{
+    flex:1;
     margin: 0;
-    padding: 0;
-}
+    padding: 12px 10px;
+    border-radius: 12px;
+  }
+  .actions button.ghost{
+    background: #fff;
+    color: var(--text);
+    border: 1px solid #d1d5db;
+    font-weight: 800;
+  }
 
-    body {
+  .top-actions{
+    display:flex;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .top-actions button{
+    flex:1;
+    margin:0;
+    padding: 10px 10px;
+    border-radius: 12px;
+    font-weight: 800;
+  }
 
-        font-family: Arial, sans-serif;
-        background: #f4f6f8;
-        padding: 20px;
-    }
-    .panel {
-        background: #fff;
-        padding: 20px;
-        border-radius: 12px;
-        width: 100%;
-        max-width: 420px;
-        margin: auto;
-        box-shadow: 0 10px 25px rgba(0,0,0,.1);
-    
-    transform: scale(0.90);
-    transform-origin: top center;
-    margin-left: auto;
-    margin-right: auto;
-}
-    h2 { margin-top: 0; }
-    select, button {
-        width: 100%;
-        padding: 10px;
-        margin: 8px 0;
-    }
-    button {
-        cursor: pointer;
-        border: none;
-        border-radius: 6px;
-        background: #1976d2;
-        color: #fff;
-        font-weight: bold;
-    }
-    button.secondary {
-        background: #e53935;
-    }
-    .result {
-        background: #e3f2fd;
-        padding: 15px;
-        margin-top: 10px;
-        border-radius: 6px;
-    }
-/* Emoji + konfeti */
-.emoji-box{
-  text-align:center;
-  margin: 10px 0 15px;
-}
-.emoji-box img{
-  width: min(38vw, 140px);
-  transition: transform .3s ease;
-  user-select:none;
-}
-.emoji-celebrate{ animation: celebrate 1s ease-in-out; }
-@keyframes celebrate{
-  0%{transform:scale(1) rotate(0deg)}
-  20%{transform:scale(1.15) rotate(-10deg)}
-  40%{transform:scale(1.28) rotate(10deg)}
-  60%{transform:scale(1.18) rotate(-6deg)}
-  80%{transform:scale(1.08) rotate(6deg)}
-  100%{transform:scale(1) rotate(0deg)}
-}
-#confettiCanvas{
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 9999;
-}
+  .stats{
+    display:flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 10px 0 12px;
+  }
+  .stat{
+    padding: 8px 10px;
+    border-radius: 999px;
+    background: rgba(25,118,210,.08);
+    border: 1px solid rgba(25,118,210,.18);
+    font-size: .92rem;
+    color: var(--text);
+  }
 
+  /* Emoji + konfeti */
+  .emoji-box{ text-align:center; margin: 10px 0 14px; }
+  .emoji-box img{
+    width: min(38vw, 140px);
+    transition: transform .3s ease;
+    user-select:none;
+  }
+  .emoji-celebrate{ animation: celebrate 1s ease-in-out; }
+  @keyframes celebrate{
+    0%{transform:scale(1) rotate(0deg)}
+    20%{transform:scale(1.15) rotate(-10deg)}
+    40%{transform:scale(1.28) rotate(10deg)}
+    60%{transform:scale(1.18) rotate(-6deg)}
+    80%{transform:scale(1.08) rotate(6deg)}
+    100%{transform:scale(1) rotate(0deg)}
+  }
+  #confettiCanvas{
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+  }
 
-@media (max-width: 480px) {
-    body { padding: 16px; }
-    .panel {
-        max-width: 94%;
-        padding: 22px;
-    }
-    h2 {
-        font-size: 1.6rem;
-    }
-    select, button {
-        font-size: 1.05rem;
-        padding: 14px;
-    }
-}
+  /* Modal */
+  .modal-backdrop{
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.35);
+    display:none;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    z-index: 10000;
+  }
+  .modal{
+    width: 100%;
+    max-width: 520px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.25);
+    overflow: hidden;
+  }
+  .modal header{
+    padding: 14px 16px;
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    border-bottom: 1px solid #eef2f7;
+    font-weight: 800;
+  }
+  .modal .content{
+    padding: 14px 16px 16px;
+    max-height: 62vh;
+    overflow:auto;
+  }
+  .fav-item{
+    padding: 12px 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    background: #fafafa;
+  }
+  .fav-item .row{
+    display:flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .fav-item small{ color: var(--muted); display:block; margin-top: 6px; }
+  .mini-btn{
+    border: 1px solid #d1d5db;
+    background: #fff;
+    color: var(--text);
+    border-radius: 10px;
+    padding: 8px 10px;
+    cursor: pointer;
+    font-weight: 800;
+  }
+  .mini-btn:active{ transform: translateY(1px); }
+
+  @media (max-width: 480px){
+    body{ padding: 16px; }
+    .panel{ padding: 20px; max-width: 94%; }
+    h2{ font-size: 1.55rem; }
+    select, button{ font-size: 1.05rem; padding: 14px; }
+    .actions{ flex-direction: column; }
+  }
 </style>
+
 <!-- PWA meta -->
-<link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#1976d2">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Mutluluk Kuponu">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="icon" href="icons/icon-192.png">
+<link rel="manifest" href="manifest.webmanifest" />
+<meta name="theme-color" content="#1976d2" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Mutluluk Kuponu" />
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+<link rel="icon" href="icons/icon-192.png" />
+
 <!-- iOS splash screens -->
-<link rel="apple-touch-startup-image" href="splash/iphone-1290x2796.png" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
-<link rel="apple-touch-startup-image" href="splash/iphone-1179x2556.png" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
-<link rel="apple-touch-startup-image" href="splash/iphone-1284x2778.png" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
-<link rel="apple-touch-startup-image" href="splash/iphone-1125x2436.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
-<link rel="apple-touch-startup-image" href="splash/ipad-2048x2732.png" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash/iphone-1290x2796.png" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+<link rel="apple-touch-startup-image" href="splash/iphone-1179x2556.png" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+<link rel="apple-touch-startup-image" href="splash/iphone-1284x2778.png" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+<link rel="apple-touch-startup-image" href="splash/iphone-1125x2436.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+<link rel="apple-touch-startup-image" href="splash/ipad-2048x2732.png" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
 </head>
+
 <body>
 <canvas id="confettiCanvas"></canvas>
 
+<div class="panel" role="application" aria-label="Mutluluk Kuponu uygulaması">
+  <div class="emoji-box">
+    <img src="emoji.png" id="emoji" alt="Kutlama emojisi" />
+  </div>
 
-<div class="panel">
-    
-    <div class="emoji-box"><img src="emoji.png" id="emoji" alt="Emoji" /></div>
-<h2> ❤️❤️Mutluluk Kuponu❤️❤️ </h2>
+  <h2>❤️❤️ Mutluluk Kuponu ❤️❤️</h2>
+  <p class="sub">Kupon seç, kaydet, paylaş. Küçük bir “iyi ki” üretim hattı 🧪✨</p>
 
-    <label>Dönem Tipi</label>
-    <select id="periodType">
-        <option value="Ay">Ay</option>
-        <option value="Çeyrek">Çeyrek</option>
-        <option value="Yıl">Yıl</option>
+  <div class="top-actions">
+    <button class="ghost" id="btnFavorites" type="button" aria-label="Favorilerimi aç">⭐ Favorilerim</button>
+    <button class="ghost" id="btnStats" type="button" aria-label="İstatistikleri yenile">📊 İstatistik</button>
+  </div>
+
+  <div class="stats" id="statsBar" aria-live="polite"></div>
+
+  <div class="field">
+    <label for="periodType">Dönem Tipi</label>
+    <select id="periodType" aria-label="Dönem tipi seç">
+      <option value="Ay">Ay</option>
+      <option value="Çeyrek">Çeyrek</option>
+      <option value="Yıl">Yıl</option>
     </select>
+  </div>
 
-    <label>Dönem Değeri</label>
-    <select id="periodValue"></select>
+  <div class="field">
+    <label for="periodValue">Dönem Değeri</label>
+    <select id="periodValue" aria-label="Dönem değeri seç"></select>
+  </div>
 
-    <button onclick="rastgeleKupon()">🎲 Rastgele Kuponunu Seç 🎁😊❤️</button>
-    <button class="secondary" onclick="gecmisiSifirla()">🧹 Bu Dönemi Sıfırla</button>
+  <button id="btnRandom" type="button" aria-label="Rastgele kupon seç">🎲 Rastgele Kuponunu Seç 🎁😊❤️</button>
+  <button class="secondary" id="btnReset" type="button" aria-label="Bu dönemi sıfırla">🧹 Bu Dönemi Sıfırla</button>
 
-    <div class="result" id="sonuc">Henüz kupon seçilmedi.</div>
+  <div class="result" id="sonuc" aria-live="polite">Henüz kupon seçilmedi.</div>
+</div>
+
+<!-- Favorites Modal -->
+<div class="modal-backdrop" id="favBackdrop" role="dialog" aria-modal="true" aria-label="Favoriler modalı">
+  <div class="modal">
+    <header>
+      <span>⭐ Favoriler</span>
+      <button class="mini-btn" id="closeFav" type="button" aria-label="Favorileri kapat">Kapat ✖️</button>
+    </header>
+    <div class="content" id="favList"></div>
+  </div>
 </div>
 
 <script>
+/* -------------------------
+   DATA
+------------------------- */
 const kuponlar = [
+  { ay:"Ocak", no:1,  metin:"Yeni yılın ilk ‘biz’ randevusu: mum ışığı + 1 şarkı + 1 uzun sarılma. 🕯️🎶🤍" },
+  { ay:"Ocak", no:2,  metin:"Battaniye burrito kuponu: Sen sarılıyorsun, ben çay-servis modundayım. 🛋️☕" },
+  { ay:"Ocak", no:3,  metin:"Ayak masajı (10 dk) + sıcak çorap servisi: VIP ev paketi. 🦶🧦✨" },
+  { ay:"Ocak", no:4,  metin:"‘Yeni yıl, yeni rota’: Hiç gitmediğimiz bir kahveciyi keşfediyoruz. ☕🗺️" },
+  { ay:"Ocak", no:5,  metin:"Çantana gizli not bırakıyorum: gün içinde yakalayınca gülümseyeceksin. 💌🙂" },
+  { ay:"Ocak", no:6,  metin:"Dizi seçimi bende: itiraz hakkın 1 kez, sonrası ‘tamam aşkım’ 😄 📺" },
+  { ay:"Ocak", no:7,  metin:"‘Bugün sen dinlen’: ev işi + toparlama benden, sen koltukta kraliçesin. 👑🛋️" },
+  { ay:"Ocak", no:8,  metin:"Kış yürüyüşü challenge: 20 dk yürüyüş + dönüşte sıcak tatlı. ❄️🚶‍♂️🍰" },
+  { ay:"Ocak", no:9,  metin:"1 sayfalık mini mektup: ‘Bu yıl seni neden daha çok seviyorum?’ 💖✍️" },
+  { ay:"Ocak", no:10, metin:"Koltukta yastık kalesi: giriş şifresi ‘öpücük’. 😘🛡️" },
+  { ay:"Ocak", no:11, metin:"Telefonlar sessizde 30 dk: dünya beklesin, biz yavaşlayalım. 📵🕰️" },
+  { ay:"Ocak", no:12, metin:"Mini ‘market keşfi’: hiç almadığımız 3 atıştırmalığı seçip tadım yapıyoruz. 🛒🍿" },
 
-    { ay:"Ocak", no:1, metin:"Yeni yılın ilk ‘biz’ randevusu: mum ışığı + 1 şarkı + 1 uzun sarılma. 🕯️🎶🤍" },
-    { ay:"Ocak", no:2, metin:"Battaniye burrito kuponu: Sen sarılıyorsun, ben çay-servis modundayım. 🛋️☕" },
-    { ay:"Ocak", no:3, metin:"Ayak masajı (10 dk) + sıcak çorap servisi: VIP ev paketi. 🦶🧦✨" },
-    { ay:"Ocak", no:4, metin:"‘Yeni yıl, yeni rota’: Hiç gitmediğimiz bir kahveciyi keşfediyoruz. ☕🗺️" },
-    { ay:"Ocak", no:5, metin:"Çantana gizli not bırakıyorum: gün içinde yakalayınca gülümseyeceksin. 💌🙂" },
-    { ay:"Ocak", no:6, metin:"Dizi seçimi bende: itiraz hakkın 1 kez, sonrası ‘tamam aşkım’ 😄 📺" },
-    { ay:"Ocak", no:7, metin:"‘Bugün sen dinlen’: ev işi + toparlama benden, sen koltukta kraliçesin. 👑🛋️" },
-    { ay:"Ocak", no:8, metin:"Kış yürüyüşü challenge: 20 dk yürüyüş + dönüşte sıcak tatlı. ❄️🚶‍♂️🍰" },
-    { ay:"Ocak", no:9, metin:"1 sayfalık mini mektup: ‘Bu yıl seni neden daha çok seviyorum?’ 💖✍️" },
-    { ay:"Ocak", no:10, metin:"Koltukta yastık kalesi: giriş şifresi ‘öpücük’. 😘🛡️" },
-    { ay:"Ocak", no:11, metin:"Telefonlar sessizde 30 dk: dünya beklesin, biz yavaşlayalım. 📵🕰️" },
-    { ay:"Ocak", no:12, metin:"Mini ‘market keşfi’: hiç almadığımız 3 atıştırmalığı seçip tadım yapıyoruz. 🛒🍿" },
+  { ay:"Şubat", no:1,  metin:"Sevgililer Günü değil, ‘sen günün’: dışarıda tatlı date (30 dk bile yeter). 💕🍰" },
+  { ay:"Şubat", no:2,  metin:"3 saçma şaka hakkım var. Gülmesen de devam: sevgiden kaynaklı 😄 🤪" },
+  { ay:"Şubat", no:3,  metin:"Sıcak içecek servisi + battaniye + loş ışık: ‘kış spa’ modu. ☕🛋️🕯️" },
+  { ay:"Şubat", no:4,  metin:"Birlikte yeni bir tat deniyoruz: ‘bunu sevdik mi’ oylaması yapıyoruz. 🍽️🗳️" },
+  { ay:"Şubat", no:5,  metin:"Fotoğrafımızı bastırıp arkasına ‘iyi ki’ notu yazıyorum. 🖼️💌" },
+  { ay:"Şubat", no:6,  metin:"Karaoke düeti: ses güzel olmak zorunda değil, enerji şart 🎤 🎶" },
+  { ay:"Şubat", no:7,  metin:"Omuz masajı (10 dk): konuşmak yok, rahatlamak var. 💆‍♀️😌" },
+  { ay:"Şubat", no:8,  metin:"Mini hazine avı: 3 ipucu, finalde minik sürpriz. 🗺️🎁" },
+  { ay:"Şubat", no:9,  metin:"Evde mum ışığında film: arada ‘seni seviyorum’ molası zorunlu. 🎬🕯️❤️" },
+  { ay:"Şubat", no:10, metin:"Atıştırmalık jürisi sensin: 3 seçenek, puanlama, kazanan tekrar alınır. 🍿⭐" },
+  { ay:"Şubat", no:11, metin:"‘Bugün ben hallederim’: koşturmacanı ben alıyorum, sen nefes al. 🤍🌿" },
+  { ay:"Şubat", no:12, metin:"Sergi/müze mini turu: sonunda ‘en çok neyi sevdin’ sohbeti. 🖼️🗣️" },
 
-    { ay:"Şubat", no:1, metin:"Sevgililer Günü değil, ‘sen günün’: dışarıda tatlı date (30 dk bile yeter). 💕🍰" },
-    { ay:"Şubat", no:2, metin:"3 saçma şaka hakkım var. Gülmesen de devam: sevgiden kaynaklı 😄 🤪" },
-    { ay:"Şubat", no:3, metin:"Sıcak içecek servisi + battaniye + loş ışık: ‘kış spa’ modu. ☕🛋️🕯️" },
-    { ay:"Şubat", no:4, metin:"Birlikte yeni bir tat deniyoruz: ‘bunu sevdik mi’ oylaması yapıyoruz. 🍽️🗳️" },
-    { ay:"Şubat", no:5, metin:"Fotoğrafımızı bastırıp arkasına ‘iyi ki’ notu yazıyorum. 🖼️💌" },
-    { ay:"Şubat", no:6, metin:"Karaoke düeti: ses güzel olmak zorunda değil, enerji şart 🎤 🎶" },
-    { ay:"Şubat", no:7, metin:"Omuz masajı (10 dk): konuşmak yok, rahatlamak var. 💆‍♀️😌" },
-    { ay:"Şubat", no:8, metin:"Mini hazine avı: 3 ipucu, finalde minik sürpriz. 🗺️🎁" },
-    { ay:"Şubat", no:9, metin:"Evde mum ışığında film: arada ‘seni seviyorum’ molası zorunlu. 🎬🕯️❤️" },
-    { ay:"Şubat", no:10, metin:"Atıştırmalık jürisi sensin: 3 seçenek, puanlama, kazanan tekrar alınır. 🍿⭐" },
-    { ay:"Şubat", no:11, metin:"‘Bugün ben hallederim’: koşturmacanı ben alıyorum, sen nefes al. 🤍🌿" },
-    { ay:"Şubat", no:12, metin:"Sergi/müze mini turu: sonunda ‘en çok neyi sevdin’ sohbeti. 🖼️🗣️" },
+  { ay:"Mart", no:1,  metin:"Bahar moduna geçiş: yürüyüş + el ele ‘plan yapma’ sohbeti. 🌸🤝" },
+  { ay:"Mart", no:2,  metin:"‘Trip yok’ protokolü: yanlış anlaşılma olursa sarılma ile çözülür. 🤗🕊️" },
+  { ay:"Mart", no:3,  metin:"Çorba + film gecesi: iç ısıtan ikili paket. 🍲🎬" },
+  { ay:"Mart", no:4,  metin:"Yeni bir kafe keşfi: ‘bizim yerimiz mi’ testi. ☕🧭" },
+  { ay:"Mart", no:5,  metin:"Gün içinde sürpriz arama: ‘nasılsın’ değil, ‘iyi ki varsın’ araması. 📞💛" },
+  { ay:"Mart", no:6,  metin:"Komik anılar gecesi: en komik 5 anımızı sırayla anlatıyoruz. 😂📖" },
+  { ay:"Mart", no:7,  metin:"Rahat kıyafet günü: şıklık iptal, huzur aktif 🧸 👕" },
+  { ay:"Mart", no:8,  metin:"Fotoğraf avı: şehirde 10 ‘güzel detay’ yakalıyoruz. 📸🏙️" },
+  { ay:"Mart", no:9,  metin:"Mini mektup: ‘Sende en sevdiğim 7 şey’ listesi. 💌7️⃣" },
+  { ay:"Mart", no:10, metin:"Oyun gecesi: kaybeden sıcak içecek yapar (drama yok). 🎲☕" },
+  { ay:"Mart", no:11, metin:"Telefon sessiz saati: 30 dk yavaş hayat + sarılma. 📵🤍" },
+  { ay:"Mart", no:12, metin:"Günübirlik mini kaçış planı: yakın bir yere kısa rota. 🚗🗺️" },
 
-    { ay:"Mart", no:1, metin:"Bahar moduna geçiş: yürüyüş + el ele ‘plan yapma’ sohbeti. 🌸🤝" },
-    { ay:"Mart", no:2, metin:"‘Trip yok’ protokolü: yanlış anlaşılma olursa sarılma ile çözülür. 🤗🕊️" },
-    { ay:"Mart", no:3, metin:"Çorba + film gecesi: iç ısıtan ikili paket. 🍲🎬" },
-    { ay:"Mart", no:4, metin:"Yeni bir kafe keşfi: ‘bizim yerimiz mi’ testi. ☕🧭" },
-    { ay:"Mart", no:5, metin:"Gün içinde sürpriz arama: ‘nasılsın’ değil, ‘iyi ki varsın’ araması. 📞💛" },
-    { ay:"Mart", no:6, metin:"Komik anılar gecesi: en komik 5 anımızı sırayla anlatıyoruz. 😂📖" },
-    { ay:"Mart", no:7, metin:"Rahat kıyafet günü: şıklık iptal, huzur aktif 🧸 👕" },
-    { ay:"Mart", no:8, metin:"Fotoğraf avı: şehirde 10 ‘güzel detay’ yakalıyoruz. 📸🏙️" },
-    { ay:"Mart", no:9, metin:"Mini mektup: ‘Sende en sevdiğim 7 şey’ listesi. 💌7️⃣" },
-    { ay:"Mart", no:10, metin:"Oyun gecesi: kaybeden sıcak içecek yapar (drama yok). 🎲☕" },
-    { ay:"Mart", no:11, metin:"Telefon sessiz saati: 30 dk yavaş hayat + sarılma. 📵🤍" },
-    { ay:"Mart", no:12, metin:"Günübirlik mini kaçış planı: yakın bir yere kısa rota. 🚗🗺️" },
+  { ay:"Nisan", no:1,  metin:"Çiçek pazarı mini turu: eve 1 demet ‘bahar’ getiriyoruz. 💐🌼" },
+  { ay:"Nisan", no:2,  metin:"‘Enerji tasarrufu’ günü: tembellik serbest, vicdan azabı yasak 😄 🔋" },
+  { ay:"Nisan", no:3,  metin:"Mini ev spa: maske + loş ışık + sakin playlist. 🧖‍♀️🎧" },
+  { ay:"Nisan", no:4,  metin:"Yeni bir sokak/mahalle keşfi: yürüyüş + kahve molası. 🚶‍♂️☕" },
+  { ay:"Nisan", no:5,  metin:"Sürpriz tatlı: ‘bugün senin gülüşün’ için küçük bir kaçamak. 🍰😊" },
+  { ay:"Nisan", no:6,  metin:"Yastık kalesi 2.0: giriş şifresi bu kez ‘gülücük’. 😄🛡️" },
+  { ay:"Nisan", no:7,  metin:"Omuz masajı + sıcak içecek: bahar yorgunluğuna veda. 💆‍♂️☕" },
+  { ay:"Nisan", no:8,  metin:"Hiç denemediğimiz bir tarif: birlikte yapıp birlikte yiyoruz. 🍳👩‍🍳" },
+  { ay:"Nisan", no:9,  metin:"Aynaya post-it notu: sabah görünce ‘tamam’ diyeceksin. 🪞📝" },
+  { ay:"Nisan", no:10, metin:"Karaoke düeti: bu sefer ‘en kötü ses’ ödülü de var 😄 🎤" },
+  { ay:"Nisan", no:11, metin:"‘Ben hallederim’ kuponu: ufak bir işini ben üstleniyorum. 🛠️🤍" },
+  { ay:"Nisan", no:12, metin:"Sergi/müze değilse bile: kitapçı turu + 1 küçük keşif. 📚🗺️" },
 
-    { ay:"Nisan", no:1, metin:"Çiçek pazarı mini turu: eve 1 demet ‘bahar’ getiriyoruz. 💐🌼" },
-    { ay:"Nisan", no:2, metin:"‘Enerji tasarrufu’ günü: tembellik serbest, vicdan azabı yasak 😄 🔋" },
-    { ay:"Nisan", no:3, metin:"Mini ev spa: maske + loş ışık + sakin playlist. 🧖‍♀️🎧" },
-    { ay:"Nisan", no:4, metin:"Yeni bir sokak/mahalle keşfi: yürüyüş + kahve molası. 🚶‍♂️☕" },
-    { ay:"Nisan", no:5, metin:"Sürpriz tatlı: ‘bugün senin gülüşün’ için küçük bir kaçamak. 🍰😊" },
-    { ay:"Nisan", no:6, metin:"Yastık kalesi 2.0: giriş şifresi bu kez ‘gülücük’. 😄🛡️" },
-    { ay:"Nisan", no:7, metin:"Omuz masajı + sıcak içecek: bahar yorgunluğuna veda. 💆‍♂️☕" },
-    { ay:"Nisan", no:8, metin:"Hiç denemediğimiz bir tarif: birlikte yapıp birlikte yiyoruz. 🍳👩‍🍳" },
-    { ay:"Nisan", no:9, metin:"Aynaya post-it notu: sabah görünce ‘tamam’ diyeceksin. 🪞📝" },
-    { ay:"Nisan", no:10, metin:"Karaoke düeti: bu sefer ‘en kötü ses’ ödülü de var 😄 🎤" },
-    { ay:"Nisan", no:11, metin:"‘Ben hallederim’ kuponu: ufak bir işini ben üstleniyorum. 🛠️🤍" },
-    { ay:"Nisan", no:12, metin:"Sergi/müze değilse bile: kitapçı turu + 1 küçük keşif. 📚🗺️" },
+  { ay:"Mayıs", no:1,  metin:"Gün batımı randevusu: kısa yürüyüş, sonra ‘iyi ki’ sohbeti. 🌇🤍" },
+  { ay:"Mayıs", no:2,  metin:"Dondurma turu: iki top sınırı yok, mutluluk var 🍦😄" },
+  { ay:"Mayıs", no:3,  metin:"Evde piknik: örtü, atıştırmalık, rahat kıyafet, bol huzur. 🧺🌿" },
+  { ay:"Mayıs", no:4,  metin:"Yeni aktivite deneme: bowling/workshop/dans… ne denk gelirse. 🎳🎨💃" },
+  { ay:"Mayıs", no:5,  metin:"Playlist güncelleme: ikimizin şarkılarından 12 parça seçiyoruz. 🎶📀" },
+  { ay:"Mayıs", no:6,  metin:"‘Sen seç, ben uygularım’ günü (mantık sınırlarıyla 😄). 🎯" },
+  { ay:"Mayıs", no:7,  metin:"Ayak masajı + ‘bir bölüm daha’ izni. 🦶📺" },
+  { ay:"Mayıs", no:8,  metin:"Fotoğraf avı: 10 kare, 1 baskı, 1 anı. 📸🖨️" },
+  { ay:"Mayıs", no:9,  metin:"Mini mektup: ‘Sana minnettar olduğum 5 şey’. 💌🙏" },
+  { ay:"Mayıs", no:10, metin:"Oyun gecesi: kaybeden bulaşıkları toparlar (barışçıl). 🎲🫧" },
+  { ay:"Mayıs", no:11, metin:"‘Bugün sen dinlen’: ev işi + düzen benden. 🧹🤍" },
+  { ay:"Mayıs", no:12, metin:"Yeni restoran/kafe denemesi: ‘favori liste’ye aday arıyoruz. 🍽️⭐" },
 
-    { ay:"Mayıs", no:1, metin:"Gün batımı randevusu: kısa yürüyüş, sonra ‘iyi ki’ sohbeti. 🌇🤍" },
-    { ay:"Mayıs", no:2, metin:"Dondurma turu: iki top sınırı yok, mutluluk var 🍦😄" },
-    { ay:"Mayıs", no:3, metin:"Evde piknik: örtü, atıştırmalık, rahat kıyafet, bol huzur. 🧺🌿" },
-    { ay:"Mayıs", no:4, metin:"Yeni aktivite deneme: bowling/workshop/dans… ne denk gelirse. 🎳🎨💃" },
-    { ay:"Mayıs", no:5, metin:"Playlist güncelleme: ikimizin şarkılarından 12 parça seçiyoruz. 🎶📀" },
-    { ay:"Mayıs", no:6, metin:"‘Sen seç, ben uygularım’ günü (mantık sınırlarıyla 😄). 🎯" },
-    { ay:"Mayıs", no:7, metin:"Ayak masajı + ‘bir bölüm daha’ izni. 🦶📺" },
-    { ay:"Mayıs", no:8, metin:"Fotoğraf avı: 10 kare, 1 baskı, 1 anı. 📸🖨️" },
-    { ay:"Mayıs", no:9, metin:"Mini mektup: ‘Sana minnettar olduğum 5 şey’. 💌🙏" },
-    { ay:"Mayıs", no:10, metin:"Oyun gecesi: kaybeden bulaşıkları toparlar (barışçıl). 🎲🫧" },
-    { ay:"Mayıs", no:11, metin:"‘Bugün sen dinlen’: ev işi + düzen benden. 🧹🤍" },
-    { ay:"Mayıs", no:12, metin:"Yeni restoran/kafe denemesi: ‘favori liste’ye aday arıyoruz. 🍽️⭐" },
+  { ay:"Haziran", no:1,  metin:"Yaz akşamı yürüyüşü: kulaklık paylaşımı opsiyonlu. 🌆🎧" },
+  { ay:"Haziran", no:2,  metin:"Soğuk kahve servisi: buz miktarı senin hükmünde 😄 🧊☕" },
+  { ay:"Haziran", no:3,  metin:"Buz gibi meyve tabağı + dizi: yaz konforu. 🍉📺" },
+  { ay:"Haziran", no:4,  metin:"Günübirlik mini kaçış: yakın rota + kahve molası. 🚗☕" },
+  { ay:"Haziran", no:5,  metin:"Sürpriz mesaj: ‘Bugünün en güzel yanı sensin’ diye düşüyorum. 💬💖" },
+  { ay:"Haziran", no:6,  metin:"‘Ben şoförüm’ kuponu: sen DJ’sin, ben sürücüyüm. 🚗🎧" },
+  { ay:"Haziran", no:7,  metin:"Telefon sessiz 30 dk: yavaşlık + sarılma. 📵🤍" },
+  { ay:"Haziran", no:8,  metin:"Yeni bir içecek/limonata tarifi deniyoruz, tadım jürisi sensin. 🍋🥤" },
+  { ay:"Haziran", no:9,  metin:"Evde balkon/teras sohbeti: 30 dk ‘sadece biz’. 🌙🛋️" },
+  { ay:"Haziran", no:10, metin:"Atıştırmalık jürisi 2: 3 yeni şey, 10 üzerinden puan. 🍿🔟" },
+  { ay:"Haziran", no:11, metin:"Omuz masajı + klima/fan ayarı: VIP rahatlama. 💆‍♀️❄️" },
+  { ay:"Haziran", no:12, metin:"Harita açıp 3 hayali rota seçiyoruz: kısa/orta/bir gün. 🗺️✨" },
 
-    { ay:"Haziran", no:1, metin:"Yaz akşamı yürüyüşü: kulaklık paylaşımı opsiyonlu. 🌆🎧" },
-    { ay:"Haziran", no:2, metin:"Soğuk kahve servisi: buz miktarı senin hükmünde 😄 🧊☕" },
-    { ay:"Haziran", no:3, metin:"Buz gibi meyve tabağı + dizi: yaz konforu. 🍉📺" },
-    { ay:"Haziran", no:4, metin:"Günübirlik mini kaçış: yakın rota + kahve molası. 🚗☕" },
-    { ay:"Haziran", no:5, metin:"Sürpriz mesaj: ‘Bugünün en güzel yanı sensin’ diye düşüyorum. 💬💖" },
-    { ay:"Haziran", no:6, metin:"‘Ben şoförüm’ kuponu: sen DJ’sin, ben sürücüyüm. 🚗🎧" },
-    { ay:"Haziran", no:7, metin:"Telefon sessiz 30 dk: yavaşlık + sarılma. 📵🤍" },
-    { ay:"Haziran", no:8, metin:"Yeni bir içecek/limonata tarifi deniyoruz, tadım jürisi sensin. 🍋🥤" },
-    { ay:"Haziran", no:9, metin:"Evde balkon/teras sohbeti: 30 dk ‘sadece biz’. 🌙🛋️" },
-    { ay:"Haziran", no:10, metin:"Atıştırmalık jürisi 2: 3 yeni şey, 10 üzerinden puan. 🍿🔟" },
-    { ay:"Haziran", no:11, metin:"Omuz masajı + klima/fan ayarı: VIP rahatlama. 💆‍♀️❄️" },
-    { ay:"Haziran", no:12, metin:"Harita açıp 3 hayali rota seçiyoruz: kısa/orta/bir gün. 🗺️✨" },
+  { ay:"Temmuz", no:1,  metin:"Yaz gecesi balkon date: ışıklar, müzik, 1 uzun sarılma. 🌙🎶🤍" },
+  { ay:"Temmuz", no:2,  metin:"Karpuz gecesi: çekirdek sayma yarışması (kazanan: sen). 🍉😄" },
+  { ay:"Temmuz", no:3,  metin:"Klima altında film maratonu: dışarısı sıcak, biz serin. ❄️🎬" },
+  { ay:"Temmuz", no:4,  metin:"Yeni park rotası: yürüyüş + dondurma finali. 🌳🍦" },
+  { ay:"Temmuz", no:5,  metin:"Gün batımı bankı: 15 dk yan yana susup ‘iyi ki’ hissetme. 🌇🤍" }, /* duplicate fixed */
+  { ay:"Temmuz", no:6,  metin:"Karaoke düeti: bu sefer ‘en dramatik performans’ ödülü var 😄 🎤" },
+  { ay:"Temmuz", no:7,  metin:"Ayak masajı + soğuk içecek servisi: yaz VIP paketi. 🦶🥤" },
+  { ay:"Temmuz", no:8,  metin:"Mini gezi: hiç gitmediğimiz bir semtte 1 saat keşif. 🚶‍♂️🗺️" },
+  { ay:"Temmuz", no:9,  metin:"Fotoğraf çekimi: ‘biz’ temalı 10 kare, en iyisini saklıyoruz. 📸❤️" },
+  { ay:"Temmuz", no:10, metin:"‘Trip yok’ protokolü yaz versiyonu: yanlış anlaşılma = dondurma. 🍦😄" },
+  { ay:"Temmuz", no:11, metin:"‘Ben hallederim’: küçük işlerin tamamı bende, sen keyifte. 🛠️😌" },
+  { ay:"Temmuz", no:12, metin:"Hiç denemediğimiz bir sokak lezzeti: birlikte test ediyoruz. 🌮🍟" },
 
-    { ay:"Temmuz", no:1, metin:"Yaz gecesi balkon date: ışıklar, müzik, 1 uzun sarılma. 🌙🎶🤍" },
-    { ay:"Temmuz", no:2, metin:"Karpuz gecesi: çekirdek sayma yarışması (kazanan: sen). 🍉😄" },
-    { ay:"Temmuz", no:3, metin:"Klima altında film maratonu: dışarısı sıcak, biz serin. ❄️🎬" },
-    { ay:"Temmuz", no:4, metin:"Yeni park rotası: yürüyüş + dondurma finali. 🌳🍦" },
-    { ay:"Temmuz", no:5, metin:"Yeni park rotası: yürüyüş + dondurma finali. 🌳🍦" },
-    { ay:"Temmuz", no:6, metin:"Karaoke düeti: bu sefer ‘en dramatik performans’ ödülü var 😄 🎤" },
-    { ay:"Temmuz", no:7, metin:"Ayak masajı + soğuk içecek servisi: yaz VIP paketi. 🦶🥤" },
-    { ay:"Temmuz", no:8, metin:"Mini gezi: hiç gitmediğimiz bir semtte 1 saat keşif. 🚶‍♂️🗺️" },
-    { ay:"Temmuz", no:9, metin:"Fotoğraf çekimi: ‘biz’ temalı 10 kare, en iyisini saklıyoruz. 📸❤️" },
-    { ay:"Temmuz", no:10, metin:"‘Trip yok’ protokolü yaz versiyonu: yanlış anlaşılma = dondurma. 🍦😄" },
-    { ay:"Temmuz", no:11, metin:"‘Ben hallederim’: küçük işlerin tamamı bende, sen keyifte. 🛠️😌" },
-    { ay:"Temmuz", no:12, metin:"Hiç denemediğimiz bir sokak lezzeti: birlikte test ediyoruz. 🌮🍟" },
+  { ay:"Ağustos", no:1,  metin:"Brunch date: yavaş sabah + uzun sohbet. 🍳☀️" },
+  { ay:"Ağustos", no:2,  metin:"‘0 stres’ anlaşması: tartışma değil, sarılma var 😄 🤗" },
+  { ay:"Ağustos", no:3,  metin:"Mini moral paketi: çikolata/maske/çorap üçlemesi. 🍫🧦" },
+  { ay:"Ağustos", no:4,  metin:"Akşamüstü keşif: yeni kafe + yeni sokak. ☕🚶‍♂️" },
+  { ay:"Ağustos", no:5,  metin:"Sürpriz not: ‘Günün en güzel kısmı sensin’ aynaya bırakıyorum. 🪞💌" },
+  { ay:"Ağustos", no:6,  metin:"Oyun gecesi: kaybeden içecek yapar, kazanan keyif sürer. 🎮🥤" },
+  { ay:"Ağustos", no:7,  metin:"Telefon sessiz saati: 30 dk yavaşlık + sarılma. 📵🤍" },
+  { ay:"Ağustos", no:8,  metin:"Fotoğraf avı: günün ‘en tatlı detayı’nı birlikte yakalıyoruz. 📸✨" },
+  { ay:"Ağustos", no:9,  metin:"Playlist: yazın en romantik 10 şarkısını birlikte seçiyoruz. 🎶💞" },
+  { ay:"Ağustos", no:10, metin:"Saçma şaka kuponu: 3 kez ‘ciddiymiş gibi’ saçmalama hakkım var 😄 🤪" },
+  { ay:"Ağustos", no:11, metin:"Ayak masajı + ince örtü altında film: yaz konforu. 🦶🎬" },
+  { ay:"Ağustos", no:12, metin:"Yeni bir aktivite: bisiklet, yürüyüş ya da mini workshop seçiyoruz. 🚲🎨" },
 
-    { ay:"Ağustos", no:1, metin:"Brunch date: yavaş sabah + uzun sohbet. 🍳☀️" },
-    { ay:"Ağustos", no:2, metin:"‘0 stres’ anlaşması: tartışma değil, sarılma var 😄 🤗" },
-    { ay:"Ağustos", no:3, metin:"Mini moral paketi: çikolata/maske/çorap üçlemesi. 🍫🧦" },
-    { ay:"Ağustos", no:4, metin:"Akşamüstü keşif: yeni kafe + yeni sokak. ☕🚶‍♂️" },
-    { ay:"Ağustos", no:5, metin:"Sürpriz not: ‘Günün en güzel kısmı sensin’ aynaya bırakıyorum. 🪞💌" },
-    { ay:"Ağustos", no:6, metin:"Oyun gecesi: kaybeden içecek yapar, kazanan keyif sürer. 🎮🥤" },
-    { ay:"Ağustos", no:7, metin:"Telefon sessiz saati: 30 dk yavaşlık + sarılma. 📵🤍" },
-    { ay:"Ağustos", no:8, metin:"Fotoğraf avı: günün ‘en tatlı detayı’nı birlikte yakalıyoruz. 📸✨" },
-    { ay:"Ağustos", no:9, metin:"Playlist: yazın en romantik 10 şarkısını birlikte seçiyoruz. 🎶💞" },
-    { ay:"Ağustos", no:10, metin:"Saçma şaka kuponu: 3 kez ‘ciddiymiş gibi’ saçmalama hakkım var 😄 🤪" },
-    { ay:"Ağustos", no:11, metin:"Ayak masajı + ince örtü altında film: yaz konforu. 🦶🎬" },
-    { ay:"Ağustos", no:12, metin:"Yeni bir aktivite: bisiklet, yürüyüş ya da mini workshop seçiyoruz. 🚲🎨" },
+  { ay:"Eylül", no:1,  metin:"Rutin başlangıcı: kahve + ‘bu ay neye seviniyoruz’ sohbeti. ☕🗓️" },
+  { ay:"Eylül", no:2,  metin:"‘Ben seçiyorum’ dizi bölümü: itiraz hakkın 1, sonrası teslimiyet 😄 📺" },
+  { ay:"Eylül", no:3,  metin:"Sıcak içecek + battaniye: sonbahara yumuşak giriş. ☕🍁" },
+  { ay:"Eylül", no:4,  metin:"Yeni kitapçı/şehir turu: 1 saat keşif + 1 küçük ödül. 📚🏙️" },
+  { ay:"Eylül", no:5,  metin:"Mini mektup: ‘Seninle gurur duyduğum 5 şey’. 💌⭐" },
+  { ay:"Eylül", no:6,  metin:"Komik anılar gecesi: eski fotoğraflara bakıp kahkaha. 😂📸" },
+  { ay:"Eylül", no:7,  metin:"Omuz masajı: ‘hafta yorgunluğu’na tekme. 💆‍♂️👊" },
+  { ay:"Eylül", no:8,  metin:"Yeni tat testi: hiç yemediğimiz bir şeyi seçip puanlıyoruz. 🍽️📝" },
+  { ay:"Eylül", no:9,  metin:"Gün batımı yürüyüşü: 20 dk + dönüşte tatlı molası. 🌇🍰" },
+  { ay:"Eylül", no:10, metin:"Yastık kalesi: bu sefer ‘VIP salon’ isimli bölüm var 😄 🛡️" },
+  { ay:"Eylül", no:11, metin:"‘Bugün sen dinlen’: ufak işleri ben alıyorum. 🤍🧹" },
+  { ay:"Eylül", no:12, metin:"Mini hazine avı: 3 ipucu, dışarıda minik sürpriz finali. 🗺️🎁" },
 
-    { ay:"Eylül", no:1, metin:"Rutin başlangıcı: kahve + ‘bu ay neye seviniyoruz’ sohbeti. ☕🗓️" },
-    { ay:"Eylül", no:2, metin:"‘Ben seçiyorum’ dizi bölümü: itiraz hakkın 1, sonrası teslimiyet 😄 📺" },
-    { ay:"Eylül", no:3, metin:"Sıcak içecek + battaniye: sonbahara yumuşak giriş. ☕🍁" },
-    { ay:"Eylül", no:4, metin:"Yeni kitapçı/şehir turu: 1 saat keşif + 1 küçük ödül. 📚🏙️" },
-    { ay:"Eylül", no:5, metin:"Mini mektup: ‘Seninle gurur duyduğum 5 şey’. 💌⭐" },
-    { ay:"Eylül", no:6, metin:"Komik anılar gecesi: eski fotoğraflara bakıp kahkaha. 😂📸" },
-    { ay:"Eylül", no:7, metin:"Omuz masajı: ‘hafta yorgunluğu’na tekme. 💆‍♂️👊" },
-    { ay:"Eylül", no:8, metin:"Yeni tat testi: hiç yemediğimiz bir şeyi seçip puanlıyoruz. 🍽️📝" },
-    { ay:"Eylül", no:9, metin:"Gün batımı yürüyüşü: 20 dk + dönüşte tatlı molası. 🌇🍰" },
-    { ay:"Eylül", no:10, metin:"Yastık kalesi: bu sefer ‘VIP salon’ isimli bölüm var 😄 🛡️" },
-    { ay:"Eylül", no:11, metin:"‘Bugün sen dinlen’: ufak işleri ben alıyorum. 🤍🧹" },
-    { ay:"Eylül", no:12, metin:"Mini hazine avı: 3 ipucu, dışarıda minik sürpriz finali. 🗺️🎁" },
+  { ay:"Ekim", no:1,  metin:"Mum + loş ışık + sohbet: ‘sonbahar romantizmi’ gecesi. 🕯️🍂" },
+  { ay:"Ekim", no:2,  metin:"Kurabiye yapıyoruz: tatma jürisi sensin, ben stajyerim 😄 🍪" },
+  { ay:"Ekim", no:3,  metin:"Çorba + film: battaniye bonuslu paket. 🍲🎬" },
+  { ay:"Ekim", no:4,  metin:"Yeni yürüyüş rotası: yaprak sesleri + kahve molası. 🍁🚶‍♂️☕" },
+  { ay:"Ekim", no:5,  metin:"Sürpriz not: ‘seninle her mevsim güzel’ mesajı. 💌🍂" },
+  { ay:"Ekim", no:6,  metin:"‘Drama yok’ anlaşması: yanlış anlaşılma olursa sarılma var. 🤗🕊️" },
+  { ay:"Ekim", no:7,  metin:"Ayak masajı + sıcak içecek: sonbahar yorgunluğu gitsin. 🦶☕" },
+  { ay:"Ekim", no:8,  metin:"Sergi/müze turu: sonunda 1 tatlı ödülü. 🖼️🍰" },
+  { ay:"Ekim", no:9,  metin:"Fotoğraf kartı: 1 foto + arkasına ‘iyi ki’ notu. 📸💌" },
+  { ay:"Ekim", no:10, metin:"Karaoke düeti: ‘en dramatik bakış’ ödülü sende 😄 🎤" },
+  { ay:"Ekim", no:11, metin:"Telefon sessiz 30 dk: yavaşlık + sarılma. 📵🤍" },
+  { ay:"Ekim", no:12, metin:"Yeni kafe deneme: ‘favori listemize girer mi’ testi. ☕⭐" },
 
-    { ay:"Ekim", no:1, metin:"Mum + loş ışık + sohbet: ‘sonbahar romantizmi’ gecesi. 🕯️🍂" },
-    { ay:"Ekim", no:2, metin:"Kurabiye yapıyoruz: tatma jürisi sensin, ben stajyerim 😄 🍪" },
-    { ay:"Ekim", no:3, metin:"Çorba + film: battaniye bonuslu paket. 🍲🎬" },
-    { ay:"Ekim", no:4, metin:"Yeni yürüyüş rotası: yaprak sesleri + kahve molası. 🍁🚶‍♂️☕" },
-    { ay:"Ekim", no:5, metin:"Sürpriz not: ‘seninle her mevsim güzel’ mesajı. 💌🍂" },
-    { ay:"Ekim", no:6, metin:"‘Drama yok’ anlaşması: yanlış anlaşılma olursa sarılma var. 🤗🕊️" },
-    { ay:"Ekim", no:7, metin:"Ayak masajı + sıcak içecek: sonbahar yorgunluğu gitsin. 🦶☕" },
-    { ay:"Ekim", no:8, metin:"Sergi/müze turu: sonunda 1 tatlı ödülü. 🖼️🍰" },
-    { ay:"Ekim", no:9, metin:"Fotoğraf kartı: 1 foto + arkasına ‘iyi ki’ notu. 📸💌" },
-    { ay:"Ekim", no:10, metin:"Karaoke düeti: ‘en dramatik bakış’ ödülü sende 😄 🎤" },
-    { ay:"Ekim", no:11, metin:"Telefon sessiz 30 dk: yavaşlık + sarılma. 📵🤍" },
-    { ay:"Ekim", no:12, metin:"Yeni kafe deneme: ‘favori listemize girer mi’ testi. ☕⭐" },
+  { ay:"Kasım", no:1,  metin:"Sıcacık bir akşam: evde date + ‘iyi ki’ konuşması. 🏠🤍" },
+  { ay:"Kasım", no:2,  metin:"Atıştırmalık tepsisi hazırlıyorum: ‘konfor seviyesi’ yükseliyor 😄 🍿" },
+  { ay:"Kasım", no:3,  metin:"Omuz masajı (10 dk): kış moduna rahat giriş. 💆‍♀️❄️" },
+  { ay:"Kasım", no:4,  metin:"Yeni bir çay/kahve denemesi: 3 çeşit tadım. ☕🍵" },
+  { ay:"Kasım", no:5,  metin:"Mini mektup: ‘senin yanında en güvende hissettiğim 3 an’. 💌🔐" },
+  { ay:"Kasım", no:6,  metin:"Komik anılar: en komik 5 olayı ‘podcast’ gibi anlatıyoruz. 🎙️😂" },
+  { ay:"Kasım", no:7,  metin:"Sıcak duş sonrası havlu servisi: VIP hissi garanti. 🚿🧖‍♂️" },
+  { ay:"Kasım", no:8,  metin:"Kış yürüyüşü: 20 dk dışarı + dönüşte boza/sıcak içecek. ❄️🚶‍♂️☕" },
+  { ay:"Kasım", no:9,  metin:"Sürpriz küçük hediye: ‘sen’ temalı minik bir şey. 🎁💖" },
+  { ay:"Kasım", no:10, metin:"Yastık kalesi: giriş şifresi ‘tamam tamam’ 😄 🛡️" },
+  { ay:"Kasım", no:11, metin:"Telefon sessiz saati: 30 dk sadece biz. 📵🤍" },
+  { ay:"Kasım", no:12, metin:"Yeni mekan keşfi: 1 saatlik mini tur + sıcak tatlı. 🗺️🍰" },
 
-    { ay:"Kasım", no:1, metin:"Sıcacık bir akşam: evde date + ‘iyi ki’ konuşması. 🏠🤍" },
-    { ay:"Kasım", no:2, metin:"Atıştırmalık tepsisi hazırlıyorum: ‘konfor seviyesi’ yükseliyor 😄 🍿" },
-    { ay:"Kasım", no:3, metin:"Omuz masajı (10 dk): kış moduna rahat giriş. 💆‍♀️❄️" },
-    { ay:"Kasım", no:4, metin:"Yeni bir çay/kahve denemesi: 3 çeşit tadım. ☕🍵" },
-    { ay:"Kasım", no:5, metin:"Mini mektup: ‘senin yanında en güvende hissettiğim 3 an’. 💌🔐" },
-    { ay:"Kasım", no:6, metin:"Komik anılar: en komik 5 olayı ‘podcast’ gibi anlatıyoruz. 🎙️😂" },
-    { ay:"Kasım", no:7, metin:"Sıcak duş sonrası havlu servisi: VIP hissi garanti. 🚿🧖‍♂️" },
-    { ay:"Kasım", no:8, metin:"Kış yürüyüşü: 20 dk dışarı + dönüşte boza/sıcak içecek. ❄️🚶‍♂️☕" },
-    { ay:"Kasım", no:9, metin:"Sürpriz küçük hediye: ‘sen’ temalı minik bir şey. 🎁💖" },
-    { ay:"Kasım", no:10, metin:"Yastık kalesi: giriş şifresi ‘tamam tamam’ 😄 🛡️" },
-    { ay:"Kasım", no:11, metin:"Telefon sessiz saati: 30 dk sadece biz. 📵🤍" },
-    { ay:"Kasım", no:12, metin:"Yeni mekan keşfi: 1 saatlik mini tur + sıcak tatlı. 🗺️🍰" },
+  { ay:"Aralık", no:1,  metin:"Yıl sonu ‘iyi ki’ gecesi: 10 dakika, 10 teşekkür, 1 sarılma. 🎇🤍" },
+  { ay:"Aralık", no:2,  metin:"Yılbaşı film gecesi: battaniye şart, tartışma yasak 😄 🎄🎬" },
+  { ay:"Aralık", no:3,  metin:"Sıcak içecek + kurabiye: kış konforu paketi. ☕🍪" },
+  { ay:"Aralık", no:4,  metin:"Mini yılbaşı avı: evde 3 ipucu, finalde küçük sürpriz. 🎄🎁" },
+  { ay:"Aralık", no:5,  metin:"Geleceğe mektup: 1 yıl sonraya not yazıp saklıyoruz. ✍️📅" },
+  { ay:"Aralık", no:6,  metin:"Hediyeleşme oyunu: 1 komik, 1 anlamlı, 1 mini sürpriz. 🎁😄" },
+  { ay:"Aralık", no:7,  metin:"Ayak masajı + ‘bir bölüm daha’ izni (limit yok). 🦶📺" },
+  { ay:"Aralık", no:8,  metin:"Kış yürüyüşü + ışıklar: kısa rota, bol fotoğraf. ❄️✨📸" },
+  { ay:"Aralık", no:9,  metin:"Sürpriz not: ‘sen benim en güzel yılbaşımsın’. 💌🎄" },
+  { ay:"Aralık", no:10, metin:"Karaoke düeti: yılbaşı özel ‘en tatlı fail’ ödülü 😄 🎤" },
+  { ay:"Aralık", no:11, metin:"Telefon sessiz 30 dk: yıl sonu reset + sarılma. 📵🤍" },
+  { ay:"Aralık", no:12, metin:"Yılbaşı öncesi yeni bir mekanda sıcak içecek keşfi. ☕🎄" }
+];
 
-    { ay:"Aralık", no:1, metin:"Yıl sonu ‘iyi ki’ gecesi: 10 dakika, 10 teşekkür, 1 sarılma. 🎇🤍" },
-    { ay:"Aralık", no:2, metin:"Yılbaşı film gecesi: battaniye şart, tartışma yasak 😄 🎄🎬" },
-    { ay:"Aralık", no:3, metin:"Sıcak içecek + kurabiye: kış konforu paketi. ☕🍪" },
-    { ay:"Aralık", no:4, metin:"Mini yılbaşı avı: evde 3 ipucu, finalde küçük sürpriz. 🎄🎁" },
-    { ay:"Aralık", no:5, metin:"Geleceğe mektup: 1 yıl sonraya not yazıp saklıyoruz. ✍️📅" },
-    { ay:"Aralık", no:6, metin:"Hediyeleşme oyunu: 1 komik, 1 anlamlı, 1 mini sürpriz. 🎁😄" },
-    { ay:"Aralık", no:7, metin:"Ayak masajı + ‘bir bölüm daha’ izni (limit yok). 🦶📺" },
-    { ay:"Aralık", no:8, metin:"Kış yürüyüşü + ışıklar: kısa rota, bol fotoğraf. ❄️✨📸" },
-    { ay:"Aralık", no:9, metin:"Sürpriz not: ‘sen benim en güzel yılbaşımsın’. 💌🎄" },
-    { ay:"Aralık", no:10, metin:"Karaoke düeti: yılbaşı özel ‘en tatlı fail’ ödülü 😄 🎤" },
-    { ay:"Aralık", no:11, metin:"Telefon sessiz 30 dk: yıl sonu reset + sarılma. 📵🤍" },
-    { ay:"Aralık", no:12, metin:"Yılbaşı öncesi yeni bir mekanda sıcak içecek keşfi. ☕🎄" }
+// %3 ihtimalle çıkan efsane kuponlar (mini easter egg) 😈✨
+const efsaneKuponlar = [
+  { ay:"Efsane", no:1, metin:"EFSANE KUPON: ‘Bugün her şey “evet”’ (mantık + sağlık sınırları dahilinde 😄). ✅✨" },
+  { ay:"Efsane", no:2, metin:"EFSANE KUPON: ‘Sürpriz mini hediye’ ve yanında “bunu hak ettin” konuşması. 🎁💬" },
+  { ay:"Efsane", no:3, metin:"EFSANE KUPON: 1 saatlik “telefon yok” dünyası, sadece biz. 📵🤍" }
 ];
 
 const dönemler = {
-    "Ay": ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"],
-    "Çeyrek": ["Ç1","Ç2","Ç3","Ç4"],
-    "Yıl": ["2025"]
+  "Ay": ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"],
+  "Çeyrek": ["Ç1","Ç2","Ç3","Ç4"],
+  "Yıl": ["2025"]
 };
 
+const ceyrekMap = {
+  "Ç1": ["Ocak","Şubat","Mart"],
+  "Ç2": ["Nisan","Mayıs","Haziran"],
+  "Ç3": ["Temmuz","Ağustos","Eylül"],
+  "Ç4": ["Ekim","Kasım","Aralık"]
+};
+
+/* -------------------------
+   HELPERS
+------------------------- */
 const periodType = document.getElementById("periodType");
 const periodValue = document.getElementById("periodValue");
 const sonuc = document.getElementById("sonuc");
+const statsBar = document.getElementById("statsBar");
 
-periodType.onchange = doldurDonem;
-doldurDonem();
+const btnRandom = document.getElementById("btnRandom");
+const btnReset = document.getElementById("btnReset");
+const btnFavorites = document.getElementById("btnFavorites");
+const btnStats = document.getElementById("btnStats");
 
-function doldurDonem(){
-    periodValue.innerHTML = "";
-    dönemler[periodType.value].forEach(v=>{
-        const o=document.createElement("option");
-        o.value=v;
-        o.text=v;
-        periodValue.appendChild(o);
-    });
+const favBackdrop = document.getElementById("favBackdrop");
+const favList = document.getElementById("favList");
+const closeFav = document.getElementById("closeFav");
+
+function trSlug(s){
+  return (s || "")
+    .toString()
+    .toLowerCase()
+    .replaceAll("ğ","g").replaceAll("ü","u").replaceAll("ş","s").replaceAll("ı","i").replaceAll("ö","o").replaceAll("ç","c")
+    .replace(/[^a-z0-9]+/g,"-")
+    .replace(/(^-|-$)/g,"");
 }
 
-function rastgeleKupon(){
-    const key = periodType.value + "_" + periodValue.value;
-    const used = JSON.parse(localStorage.getItem(key) || "[]");
-
-    const adaylar = kuponlar.filter(k =>
-        periodType.value === "Ay" ? k.ay === periodValue.value : true
-    );
-
-    const kalanlar = adaylar.filter(k => !used.includes(k.no + "_" + k.ay));
-
-    if(kalanlar.length === 0){
-        alert("Bu dönem için kupon kalmadı 🎯");
-        return;
+// Ensure each coupon has stable unique id
+function ensureIds(list){
+  list.forEach(k=>{
+    if(!k.id){
+      k.id = `${trSlug(k.ay)}-${String(k.no).padStart(2,"0")}`;
     }
+  });
+}
+ensureIds(kuponlar);
+ensureIds(efsaneKuponlar);
 
-    const secilen = kalanlar[Math.floor(Math.random()*kalanlar.length)];
-    used.push(secilen.no + "_" + secilen.ay);
-    localStorage.setItem(key, JSON.stringify(used));
+function periodKey(){
+  return `${periodType.value}_${periodValue.value}`;
+}
+function readUsed(key){
+  try{ return JSON.parse(localStorage.getItem(key) || "[]"); }
+  catch{ return []; }
+}
+function writeUsed(key, arr){
+  localStorage.setItem(key, JSON.stringify(arr));
+}
 
-    sonuc.innerHTML = `
-        <strong>🎉 Seçilen Kupon</strong><br><br>
-        <b>Ay:</b> ${secilen.ay}<br>
-        <b>No:</b> ${secilen.no}<br>
-        <b>Metin:</b> ${secilen.metin}
-    `;
+function getCandidateCoupons(){
+  const type = periodType.value;
+  const value = periodValue.value;
 
-    celebrateEmoji();
+  if(type === "Ay"){
+    return kuponlar.filter(k => k.ay === value);
+  }
+  if(type === "Çeyrek"){
+    const months = ceyrekMap[value] || [];
+    return kuponlar.filter(k => months.includes(k.ay));
+  }
+  // Yıl: tüm kuponlar
+  return kuponlar.slice();
+}
 
+function getRemaining(list, usedIds){
+  return list.filter(k => !usedIds.includes(k.id));
+}
+
+/* -------------------------
+   UI INIT
+------------------------- */
+periodType.addEventListener("change", doldurDonem);
+periodValue.addEventListener("change", () => { renderStats(); renderEmptyHint(); });
+btnRandom.addEventListener("click", rastgeleKupon);
+btnReset.addEventListener("click", gecmisiSifirla);
+btnFavorites.addEventListener("click", openFavorites);
+btnStats.addEventListener("click", renderStats);
+
+closeFav.addEventListener("click", () => favBackdrop.style.display = "none");
+favBackdrop.addEventListener("click", (e) => { if(e.target === favBackdrop) favBackdrop.style.display = "none"; });
+
+doldurDonem();
+renderStats();
+renderEmptyHint();
+
+function doldurDonem(){
+  periodValue.innerHTML = "";
+  dönemler[periodType.value].forEach(v=>{
+    const o=document.createElement("option");
+    o.value=v;
+    o.text=v;
+    periodValue.appendChild(o);
+  });
+  renderStats();
+  renderEmptyHint();
+}
+
+function renderEmptyHint(){
+  sonuc.classList.remove("fade");
+  sonuc.innerHTML = "Henüz kupon seçilmedi.";
+}
+
+/* -------------------------
+   FAVORITES
+------------------------- */
+const FAV_KEY = "favorites";
+function readFavorites(){
+  try{ return JSON.parse(localStorage.getItem(FAV_KEY) || "[]"); } catch { return []; }
+}
+function writeFavorites(arr){
+  localStorage.setItem(FAV_KEY, JSON.stringify(arr));
+}
+
+function isFav(id){
+  return readFavorites().includes(id);
+}
+function toggleFav(id){
+  const favs = readFavorites();
+  const ix = favs.indexOf(id);
+  if(ix >= 0) favs.splice(ix,1);
+  else favs.push(id);
+  writeFavorites(favs);
+  renderStats();
+}
+
+function openFavorites(){
+  const favs = readFavorites();
+  const all = [...kuponlar, ...efsaneKuponlar];
+  const map = new Map(all.map(k => [k.id, k]));
+  favList.innerHTML = "";
+
+  if(favs.length === 0){
+    favList.innerHTML = `<div class="fav-item">Şimdilik favori yok. Bir kupon seçince ⭐ ile kaydet 😄</div>`;
+  } else {
+    favs
+      .map(id => map.get(id))
+      .filter(Boolean)
+      .forEach(k=>{
+        const div = document.createElement("div");
+        div.className = "fav-item";
+        div.innerHTML = `
+          <div class="row">
+            <div>
+              <strong>${k.ay} • #${k.no}</strong>
+              <small>${k.metin}</small>
+            </div>
+            <button class="mini-btn" aria-label="Favoriden kaldır">Kaldır</button>
+          </div>
+        `;
+        div.querySelector("button").addEventListener("click", ()=>{
+          toggleFav(k.id);
+          openFavorites();
+        });
+        favList.appendChild(div);
+      });
+  }
+
+  favBackdrop.style.display = "flex";
+}
+
+/* -------------------------
+   STATS
+------------------------- */
+function computeGlobalUsedUnique(){
+  const keys = Object.keys(localStorage).filter(k =>
+    k.startsWith("Ay_") || k.startsWith("Çeyrek_") || k.startsWith("Yıl_")
+  );
+  const all = [];
+  for(const k of keys){
+    const arr = readUsed(k);
+    if(Array.isArray(arr)) all.push(...arr);
+  }
+  return [...new Set(all)];
+}
+
+function renderStats(){
+  const total = kuponlar.length; // yearly pool
+  const globalUsed = computeGlobalUsedUnique().length;
+  const favs = readFavorites().length;
+
+  const key = periodKey();
+  const usedThis = readUsed(key).length;
+
+  statsBar.innerHTML = `
+    <span class="stat">✅ Kullanılan (genel): <b>${globalUsed}</b> / ${total}</span>
+    <span class="stat">🗓️ Bu seçim: <b>${usedThis}</b></span>
+    <span class="stat">⭐ Favori: <b>${favs}</b></span>
+  `;
+}
+
+/* -------------------------
+   MAIN ACTION
+------------------------- */
+function rastgeleKupon(){
+  const key = periodKey();
+  const used = readUsed(key);
+
+  // Decide if we try to drop an efsane coupon (3%) first
+  const roll = Math.random();
+  let pool = getCandidateCoupons();
+  let picked = null;
+  let isLegendary = false;
+
+  if(roll < 0.03){
+    const remainingLegend = getRemaining(efsaneKuponlar, used);
+    if(remainingLegend.length > 0){
+      picked = remainingLegend[Math.floor(Math.random() * remainingLegend.length)];
+      isLegendary = true;
+    }
+  }
+
+  // Normal pick if not legendary
+  if(!picked){
+    const remaining = getRemaining(pool, used);
+
+    if(remaining.length === 0){
+      alert("Bu dönem için kupon kalmadı 🎯");
+      return;
+    }
+    picked = remaining[Math.floor(Math.random() * remaining.length)];
+  }
+
+  used.push(picked.id);
+  writeUsed(key, used);
+
+  renderResult(picked, isLegendary);
+  celebrateEmoji(isLegendary);
+  renderStats();
+}
+
+function renderResult(k, isLegendary){
+  const favNow = isFav(k.id);
+  const title = isLegendary ? "👑 EFSANE KUPON!" : "🎉 Seçilen Kupon";
+
+  const shareText =
+    `${title}
+Ay: ${k.ay}
+No: ${k.no}
+
+${k.metin}
+
+(Mutluluk Kuponu)`;
+
+  // build UI
+  sonuc.classList.remove("fade");
+  void sonuc.offsetWidth; // restart animation
+  sonuc.classList.add("fade");
+
+  sonuc.innerHTML = `
+    <h3>${title}</h3>
+    <div class="meta">
+      <span class="pill"><b>Ay:</b> ${k.ay}</span>
+      <span class="pill"><b>No:</b> ${k.no}</span>
+      <span class="pill" id="favPill">${favNow ? "⭐ Favoride" : "☆ Favoriye ekle"}</span>
+    </div>
+    <div style="font-size:1.02rem; line-height:1.45;"><b>Metin:</b> ${k.metin}</div>
+
+    <div class="actions" role="group" aria-label="Kupon işlemleri">
+      <button class="ghost" id="btnCopy" type="button" aria-label="Kupon metnini kopyala">📋 Kopyala</button>
+      <button class="ghost" id="btnShare" type="button" aria-label="Kuponu paylaş">📤 Paylaş</button>
+      <button id="btnFav" type="button" aria-label="Kuponu favoriye ekle veya çıkar">${favNow ? "⭐ Kaldır" : "⭐ Kaydet"}</button>
+    </div>
+  `;
+
+  document.getElementById("btnCopy").addEventListener("click", async ()=>{
+    try{
+      await navigator.clipboard.writeText(shareText);
+      toast("Kopyalandı ✅");
+    }catch{
+      // Fallback
+      const ta = document.createElement("textarea");
+      ta.value = shareText;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      ta.remove();
+      toast("Kopyalandı ✅");
+    }
+  });
+
+  document.getElementById("btnShare").addEventListener("click", async ()=>{
+    try{
+      if(navigator.share){
+        await navigator.share({ title: "Mutluluk Kuponu", text: shareText });
+      }else{
+        await navigator.clipboard.writeText(shareText);
+        toast("Paylaşım yoksa kopyaladım ✅");
+      }
+    }catch{
+      // user cancelled or unsupported
+      toast("Paylaşım iptal edildi 🫠");
+    }
+  });
+
+  document.getElementById("btnFav").addEventListener("click", ()=>{
+    toggleFav(k.id);
+    // update pill/button labels live
+    const nowFav = isFav(k.id);
+    document.getElementById("btnFav").textContent = nowFav ? "⭐ Kaldır" : "⭐ Kaydet";
+    document.getElementById("favPill").textContent = nowFav ? "⭐ Favoride" : "☆ Favoriye ekle";
+    toast(nowFav ? "Favorilere eklendi ⭐" : "Favorilerden çıkarıldı ✨");
+  });
+
+  document.getElementById("favPill").addEventListener("click", ()=>{
+    toggleFav(k.id);
+    const nowFav = isFav(k.id);
+    document.getElementById("btnFav").textContent = nowFav ? "⭐ Kaldır" : "⭐ Kaydet";
+    document.getElementById("favPill").textContent = nowFav ? "⭐ Favoride" : "☆ Favoriye ekle";
+    toast(nowFav ? "Favorilere eklendi ⭐" : "Favorilerden çıkarıldı ✨");
+  });
 }
 
 function gecmisiSifirla(){
-    const key = periodType.value + "_" + periodValue.value;
-    localStorage.removeItem(key);
-    alert("Bu dönem sıfırlandı ✨");
+  const key = periodKey();
+  localStorage.removeItem(key);
+  alert("Bu dönem sıfırlandı ✨");
+  renderStats();
+  renderEmptyHint();
 }
-/* 🎊 Confetti engine (lightweight) */
+
+/* -------------------------
+   Toast (tiny)
+------------------------- */
+let toastTimer = null;
+function toast(msg){
+  clearTimeout(toastTimer);
+  let el = document.getElementById("toast");
+  if(!el){
+    el = document.createElement("div");
+    el.id = "toast";
+    el.style.position = "fixed";
+    el.style.left = "50%";
+    el.style.bottom = "22px";
+    el.style.transform = "translateX(-50%)";
+    el.style.background = "rgba(17,24,39,.92)";
+    el.style.color = "#fff";
+    el.style.padding = "10px 12px";
+    el.style.borderRadius = "12px";
+    el.style.fontWeight = "800";
+    el.style.zIndex = "11000";
+    el.style.maxWidth = "92vw";
+    el.style.textAlign = "center";
+    document.body.appendChild(el);
+  }
+  el.textContent = msg;
+  el.style.opacity = "1";
+  toastTimer = setTimeout(()=>{ el.style.opacity = "0"; }, 1400);
+}
+
+/* -------------------------
+   Confetti engine (lightweight)
+------------------------- */
 const c = document.getElementById("confettiCanvas");
 const ctx = c.getContext("2d");
 let confetti = [];
 let confettiRunning = false;
+
 function resizeConfetti(){
   c.width = window.innerWidth * devicePixelRatio;
   c.height = window.innerHeight * devicePixelRatio;
@@ -384,8 +883,8 @@ function spawnConfetti(n=120){
   }
 }
 
-function startConfetti(durationMs=1400){
-  spawnConfetti(140);
+function startConfetti(durationMs=1400, boost=false){
+  spawnConfetti(boost ? 220 : 140);
   if(confettiRunning) return;
   confettiRunning = true;
   const endAt = performance.now() + durationMs;
@@ -396,7 +895,7 @@ function startConfetti(durationMs=1400){
     for(const p of confetti){
       p.x += p.vx;
       p.y += p.vy;
-      p.vy += 0.05; // gravity
+      p.vy += 0.05;
       p.r += p.vr;
       p.life -= 1;
 
@@ -417,13 +916,13 @@ function startConfetti(durationMs=1400){
   requestAnimationFrame(frame);
 }
 
-function celebrateEmoji(){
+function celebrateEmoji(boost=false){
   const emoji = document.getElementById("emoji");
   if(!emoji) return;
   emoji.classList.remove("emoji-celebrate");
-  void emoji.offsetWidth; // reset
+  void emoji.offsetWidth;
   emoji.classList.add("emoji-celebrate");
-  startConfetti(1600);
+  startConfetti(boost ? 2200 : 1600, boost);
 }
 
 /* PWA SW register */
